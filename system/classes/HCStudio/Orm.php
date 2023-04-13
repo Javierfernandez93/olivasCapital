@@ -19,9 +19,6 @@
 namespace HCStudio;
 
 use Exception;
-use HCStudio\Sesssion;
-use JFStudio\Client;
-use HCStudio\Token;
 
 #! Simple Object Relational Mapper
 abstract class Orm
@@ -47,8 +44,9 @@ abstract class Orm
 		# Si no se definio tabla
 		if (!$this->tblName) throw new Exception('No se encontro tabla para generar dataobject');
 
+		
 		# Si no existe dataobject
-		if (!self::$dbObject[$this->tblName])
+		if (!isset(self::$dbObject[$this->tblName]))
 		{
 			# Obtenemos informacion de tabla
 			$dbSchema = Util::arr2obj($this->db->rows("SHOW COLUMNS FROM {$this->tblName}"));
@@ -199,6 +197,11 @@ abstract class Orm
 	}
 
 	# Cargamos objecto por diversos parametros
+	public function loadWhere($where, $binds)
+	{
+		return $this->cargarDonde($where, $binds);
+	}
+	
 	public function cargarDonde($where, $binds)
 	{
 		$query = "SELECT * FROM {$this->tblName} WHERE {$where} LIMIT 1";
