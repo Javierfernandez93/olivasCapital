@@ -20,6 +20,7 @@ class Layout
 	public $_warnings  = [];
 	public $_root      = null;
 	public $_css_files = null;
+	public $_css_scritps = null;
 	public $_js_files  = null;
 	public $_layout_root= null;
 	public $virtual_view= null;
