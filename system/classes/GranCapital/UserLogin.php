@@ -81,7 +81,7 @@ class UserLogin extends Orm {
   }
 
   public function logoutRequest() {
-    $logout = ($logout) ? $logout : Util::getVarFromPGS('logout');
+    $logout = Util::getVarFromPGS('logout');
 
     if($logout) return $this->logout();
   }

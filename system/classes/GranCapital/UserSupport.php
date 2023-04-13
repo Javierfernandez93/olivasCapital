@@ -124,7 +124,7 @@ class UserSupport extends Orm {
   }
 
   public function logoutRequest() {
-    $logout = ($logout) ? $logout : Util::getVarFromPGS('adminLogout');
+    $logout = Util::getVarFromPGS('adminLogout');
 
     if($logout) return $this->logout();
   }
