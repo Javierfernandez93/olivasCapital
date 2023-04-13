@@ -30,7 +30,7 @@ define('__DEBUG__', false);
 define('LANGUAGE', 'spanish');
 
 #
-if(!__DEBUG__) {
+if(__DEBUG__) {
 	ini_set('error_reporting', E_ALL ^ E_NOTICE);
 	ini_set('display_errors', '1');
 } else  ini_set('display_errors', '0');
