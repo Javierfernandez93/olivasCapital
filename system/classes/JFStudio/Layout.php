@@ -246,7 +246,12 @@ class Layout
 	# OUTPUT = true or 1
 	public function setModule(string $name)
 	{
-		if($name && !$this->modules["%{$name}%"]) $this->modules[] = "%{$name}%";
+		if(isset($name) === true) {
+			if(isset($this->modules["{{{$name}}}"]))
+			{
+				$this->modules[] = "{{{$name}}}";
+			}
+		}
 
 		return true;
 	}
