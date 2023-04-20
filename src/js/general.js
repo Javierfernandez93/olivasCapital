@@ -749,3 +749,24 @@ String.prototype.convertDataToHtml = function() {
   });
   return convertedHtml;
 }
+
+String.prototype.sendWhatsApp = function()
+{
+  return `https://wa.me/${this}`
+}
+
+const alertInfo = ({message:message, _class:_class, icon:icon, size:size},delay = 500) => {
+  if (alert != null) {
+    alert.modal.dismiss();
+  }
+
+  setTimeout(()=>{
+    const mAlert = alertCtrl.create({
+      bgColor: `${_class} text-center border-0`,
+      size : size,
+      html: ` <div class="h2 text-white">${icon}</div> <div class="lead">${message}</div>`,
+    });
+  
+    alertCtrl.present(mAlert.modal);
+  },delay)
+}

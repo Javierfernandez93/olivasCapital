@@ -88,7 +88,7 @@ var alertCtrl = {
 
         if(this.settings.subTitle)
         {
-            $content.append($("<div />").addClass("modal-body").text(this.settings.subTitle));
+            $content.append($("<div />").addClass("modal-body").html(this.settings.subTitle));
         }
 
         if(this.settings.html)
@@ -216,9 +216,9 @@ var alertCtrl = {
         let id = btn.id ? btn.id : this.createUUID();
             btn.id = id;
 
-        let _class = btn.class == undefined ? "btn-light" : btn.class;
+        let _class = btn.class == undefined ? "btn-secondary" : btn.class;
         
-        this.footer.prepend($("<button />").addClass("btn "+_class)
+        this.footer.prepend($("<button />").addClass("btn shadow-none mb-0 "+_class)
             .attr("id", id)
             .attr("type", "button")
             .text(btn.text)

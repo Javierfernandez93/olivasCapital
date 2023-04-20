@@ -7,6 +7,9 @@ class UserSupport extends Http {
     getUsers(data, callback) {
         return this.call('../../app/application/get_users.php', data, callback);
     }
+    applyPartialWithdraw(data, callback) {
+        return this.call('../../app/application/applyPartialWithdraw.php', data, callback);
+    }
     getAdministrators(data, callback) {
         return this.call('../../app/application/get_administrators.php', data, callback);
     }

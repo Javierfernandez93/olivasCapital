@@ -6,6 +6,8 @@ use HCStudio\Orm;
 
 class CatalogPlan extends Orm {
 	const MAX_PROFIT = 12;
+	const MIN_PLAN_AMMOUNT = 100;
+	
 	protected $tblName = 'catalog_plan';
 	public function __construct() {
 		parent::__construct();
@@ -57,29 +59,33 @@ class CatalogPlan extends Orm {
 	{
 		if(isset($ammount) === true)
 		{
-			$catalog_plan_id = 0;
-
-			if($catalog_plans = $this->getAll())
+			if($ammount > 0)
 			{
-				if($ammount >= $catalog_plans[0]['name'])
+				$catalog_plan_id = 0;
+	
+				if($catalog_plans = $this->getAll())
 				{
-					foreach($catalog_plans as $key => $catalog_plan)
+					if($ammount >= $catalog_plans[0]['name'])
 					{
-						$nextVal = $$catalog_plans[$key+1] != null ? $catalog_plans[$key+1]['name'] : INF;
-		
-						if ($ammount >= $catalog_plan['name'] && $ammount < $nextVal) 
+						foreach($catalog_plans as $key => $catalog_plan)
 						{
-							$catalog_plan_id = $catalog_plan['catalog_plan_id'];
+							//fix
+							$nextVal = isset($catalog_plans[$key+1]) ? $catalog_plans[$key+1]['name'] : INF;
+			
+							if ($ammount >= $catalog_plan['name'] && $ammount < $nextVal) 
+							{
+								$catalog_plan_id = $catalog_plan['catalog_plan_id'];
+							}
 						}
+					} else {
+						$catalog_plan_id = $catalog_plans[0]['catalog_plan_id'];
 					}
-				} else {
-					$catalog_plan_id = $catalog_plans[0]['catalog_plan_id'];
 				}
+				
+				return $ammount >= self::MIN_PLAN_AMMOUNT ? $catalog_plan_id : 0;
 			}
-
-			return $catalog_plan_id;
 		}
 
-		return false;
+		return 0;
 	}
 }

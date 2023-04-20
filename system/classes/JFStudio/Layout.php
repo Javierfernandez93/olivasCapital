@@ -13,21 +13,23 @@ class Layout
 	public $_page_name = "";
 	public $_layout    = "";
 	public $_view      = "";
-	public $_js_path   = null;
-	public $_css_path  = null;
+	public $js_path   = null;
+	public $css_path  = null;
 	public $_path      = "";
 	public $_vars      = [];
 	public $_warnings  = [];
 	public $_root      = null;
-	public $_css_files = null;
-	public $_css_scritps = null;
-	public $_js_files  = null;
-	public $_layout_root= null;
+	
+	public $layout_root= null;
 	public $virtual_view= null;
-	public $_view_root  = null;
+	public $view_root  = null;
+
 	public $content_virtual_view = null;
 	public $_pretitle  = 'Gran Capital Fund - ';
 	public $modules    = [];
+
+	public $css_scripts = null;
+	public $js_scripts = null;
 	# protected vars
 
 	# private vars
@@ -49,13 +51,13 @@ class Layout
 
 	public function init($page_name = 'Página', $view = false, $layout = false, $root = "", $layout_root = "../../", $view_root = false,$virtual_view = false)
 	{
-		$this->_layout_root = ($layout_root) ? $layout_root : $root;
-		$this->_view_root   = ($view_root) ? $view_root : $root;
+		$this->layout_root = ($layout_root) ? $layout_root : $root;
+		$this->view_root   = ($view_root) ? $view_root : $root;
 		$this->virtual_view  = ($virtual_view) ? $virtual_view : $virtual_view;
 
 		$this->_root = $root;
 		
-		if(isset($this->_css_path,$this->_js_path) == false) {
+		if(isset($this->css_path,$this->js_path) == false) {
 			$this->setScriptPath('../../src/');
 		}
 
@@ -107,7 +109,7 @@ class Layout
 	{
 		if($view)
 		{
-			$this->_view = "{$this->_view_root}view/{$view}.view.php";
+			$this->_view = "{$this->view_root}view/{$view}.view.php";
 
 			if($this->virtual_view === false)
 			{
@@ -142,8 +144,8 @@ class Layout
 	{
 		if($layout)
 		{
-			$this->_layout = "{$this->_layout_root}layout/{$layout}.layout.php";
-			$this->_layout_root;
+			$this->_layout = "{$this->layout_root}layout/{$layout}.layout.php";
+			$this->layout_root;
 
 			if( file_exists( $this->_layout ) )
 			    return true;
@@ -193,13 +195,13 @@ class Layout
 		$__content = $this->replaceView("content",$view_content,$__content);
 
 		# replacing js scripts
-		if($this->_js_scripts ?? false)
-			$__content = $this->replaceView("js_scripts",$this->_js_scripts,$__content);
+		if($this->js_scripts ?? false)
+			$__content = $this->replaceView("js_scripts",$this->js_scripts,$__content);
 		else $__content = $this->replaceView("js_scripts","",$__content);
 
 		# replacing css scripts
-		if($this->_css_scripts ?? false)
-			$__content = $this->replaceView("css_scripts",$this->_css_scripts,$__content);
+		if($this->css_scripts ?? false)
+			$__content = $this->replaceView("css_scripts",$this->css_scripts,$__content);
 		else $__content = $this->replaceView("css_scripts","",$__content );
 
 		# looking for modules
@@ -330,20 +332,20 @@ class Layout
 				$value .= "?t=".time();
 
 				if( !strpos($value,".css") === false )
-					$this->_css_scripts[] = $value;
+					$this->css_scripts[] = $value;
 				else if( !strpos($value,".js") === false )
-					$this->_js_scripts[] = $value;
+					$this->js_scripts[] = $value;
 				else if(!strpos($value,".*") === false ) {
-					$this->_css_scripts[] = str_replace("*", "css", $value);
-					$this->_js_scripts[] = str_replace("*", "js", $value);
+					$this->css_scripts[] = str_replace("*", "css", $value);
+					$this->js_scripts[] = str_replace("*", "js", $value);
 				}
 			}
 
-			if( $this->_css_scripts ?? false)
-				$this->_css_scripts = $this->setCssScripts();
+			if( $this->css_scripts ?? false)
+				$this->css_scripts = $this->setCssScripts();
 
-			if( $this->_js_scripts )
-				$this->_js_scripts = $this->setJsScripts();
+			if( $this->js_scripts ?? false)
+				$this->js_scripts = $this->setJsScripts();
 		}
 	}
 
@@ -356,44 +358,46 @@ class Layout
 	}
 	public function setJsScripts()
 	{
-		$__files_names = null;
+		$files_names = null;
 
-		foreach ($this->_js_scripts as $js_file_name) {
-			if($this->isJsModule($js_file_name) === true)
+		foreach($this->js_scripts as $file) {
+			if($this->isJsModule($file) === true)
 			{
-				$__files_names .= "<script type='module' src='{$this->_root}{$this->_js_path}js/{$js_file_name}'></script>";
+				$files_names .= "<script type='module' src='{$this->_root}{$this->js_path}js/{$file}'></script>";
 			} else {
-				$__files_names .= "<script src='{$this->_root}{$this->_js_path}js/{$js_file_name}'></script>";
+				$files_names .= "<script src='{$this->_root}{$this->js_path}js/{$file}'></script>";
 			}
 		}
 
-		return $__files_names;
+		return $files_names;
 	}
 
 	# function:: adds css scripts to "view".view.php
 	# extended by setScript()
 	public function setCssScripts()
 	{
-		$__files_names = null;
-		foreach ($this->_css_scripts as $key => $css_file_name)
-			$__files_names .= "<link rel='stylesheet' type='text/css' href='{$this->_root}{$this->_css_path}css/{$css_file_name}'>";
+		$files_names = null;
 
-		return $__files_names;
+		foreach($this->css_scripts as $file) {
+			$files_names .= "<link rel='stylesheet' type='text/css' href='{$this->_root}{$this->css_path}css/{$file}'>";
+		}
+
+		return $files_names;
 	}
 
-	public function setScriptPath($script_path)
+	public function setScriptPath(string $script_path = null)
 	{
-		$this->_css_path = $script_path;
-		$this->_js_path  = $script_path;
+		$this->css_path = $script_path;
+		$this->js_path  = $script_path;
 	}
 
-	public function setScript_css_path($css_path)
+	public function setScriptCssPath(string $css_path = null)
 	{
-		$this->_css_path = $css_path;
+		$this->css_path = $css_path;
 	}
 
-	public function setScript_js_path($js_path)
+	public function setScriptJsPath(string $js_path = null)
 	{
-		$this->_js_path = $js_path;
+		$this->js_path = $js_path;
 	}
 }
