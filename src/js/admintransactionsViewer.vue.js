@@ -1,4 +1,4 @@
-import { UserSupport } from '../../src/js/userSupport.module.js?t=1.0.2'
+import { UserSupport } from '../../src/js/userSupport.module.js?t=1.0.3'
 
 /* vue */
 const AdmintransactionsViewer = {
