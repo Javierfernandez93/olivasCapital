@@ -104,7 +104,7 @@ class UserSupport extends Http {
         return this.call('../../app/application/get_administrator_permissions.php', data, callback);
     }
     saveAdministrator(data, callback) {
-        return this.call('../../app/application/save_administrator.php', data, callback);
+        return this.call('../../app/application/save_administrator.php', data, callback, null, null, 'POST');
     }
     editAdministrator(data, callback) {
         return this.call('../../app/application/edit_administrator.php', data, callback, null, null, 'POST');

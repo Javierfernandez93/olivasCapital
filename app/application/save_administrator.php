@@ -10,7 +10,7 @@ if($UserSupport->_loaded === true)
 {
     // filtering data
     $data['administrator']['permissions'] = array_filter($data['administrator']['permissions'],function($permission) {
-        return $permission['checked'];
+        return $permission['checked'] ?? true;
     });
 
     if($UserSupport->isUniqueMail($data['administrator']['email']))
